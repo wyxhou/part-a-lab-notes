@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part A Lab Practicals — Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ─── LIGHT THEME ─── */
+  :root, [data-theme="light"] {
+    --bg: #fdf8f0;
+    --surface: #fff9f2;
+    --surface2: #fdf3ec;
+    --ink: #1a1208;
+    --muted: #7a6e60;
+    --accent: #c4542a;
+    --accent-light: #f5e8e2;
+    --accent-border: #e8c4b4;
+    --gold: #b8860b;
+    --gold-light: #fef9e7;
+    --gold-border: #e8d88a;
+    --border: #e8ddd0;
+    --highlight: #fff2cc;
+    --formula-bg: #1a1208;
+    --formula-fg: #fdf8f0;
+    --formula-muted: #b8a898;
+    --comp-row-alt: #fdf8f4;
+  }
+
+  /* ─── DARK THEME ─── */
+  [data-theme="dark"] {
+    --bg: #12100e;
+    --surface: #1c1916;
+    --surface2: #252018;
+    --ink: #f0ead8;
+    --muted: #9a8e7e;
+    --accent: #e07050;
+    --accent-light: #2a1a12;
+    --accent-border: #5a3020;
+    --gold: #d4a830;
+    --gold-light: #1e1a08;
+    --gold-border: #5a4a10;
+    --border: #2e2820;
+    --highlight: #2a2408;
+    --formula-bg: #0a0806;
+    --formula-fg: #f0ead8;
+    --formula-muted: #8a7a60;
+    --comp-row-alt: #1a1610;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { transition: background 0.3s; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 6px 12px 6px 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+
+  .toggle-track {
+    width: 34px; height: 18px;
+    background: var(--border);
+    border-radius: 9px;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  [data-theme="dark"] .toggle-track { background: var(--accent); }
+
+  .toggle-knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 14px; height: 14px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  [data-theme="dark"] .toggle-knob { transform: translateX(16px); }
+
+  .toggle-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  header .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  header h1 span { color: var(--accent); }
+
+  .exam-grid {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .exam-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+  }
+  .exam-chip strong { color: var(--accent); font-weight: 500; }
+
+  /* ─── TABS ─── */
+  .tab-nav {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    background: var(--surface);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    transition: all 0.2s;
+    border-right: 1px solid var(--border);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active { background: var(--accent); color: white; font-weight: 500; }
+  .tab-btn .tab-pts {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    margin-top: 2px;
+    opacity: 0.7;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ─── EXPERIMENT CARDS ─── */
+  .exp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .exp-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s;
+  }
+  .exp-header:hover { background: var(--surface2); }
+  .exp-header.open { border-bottom-color: var(--border); background: var(--accent-light); }
+
+  .exp-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .exp-title {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    flex: 1;
+  }
+  .exp-toggle {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .exp-header.open .exp-toggle { transform: rotate(180deg); }
+  .exp-body { display: none; padding: 20px 24px 24px; }
+  .exp-body.open { display: block; }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 24px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .plan-box {
+    background: var(--gold-light);
+    border: 1px solid var(--gold-border);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .steps { counter-reset: step; list-style: none; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 24px; height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  u { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+
+  .star-item {
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .star-item::before {
+    content: '★';
+    color: var(--accent);
+    font-size: 12px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  .data-table th {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid var(--accent-border);
+  }
+  .data-table td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  .data-table tr:nth-child(even) td { background: var(--comp-row-alt); }
+
+  .disc-text { font-size: 14px; color: var(--ink); line-height: 1.8; }
+  .disc-text p { margin-bottom: 10px; }
+
+  /* ─── VIVA ─── */
+  .viva-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .viva-q {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .viva-q:hover { background: var(--accent-light); }
+  .viva-q-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+    border: 1px solid var(--accent-border);
+  }
+  .viva-a {
+    display: none;
+    padding: 12px 16px;
+    font-size: 13px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    line-height: 1.7;
+  }
+  .viva-a.open { display: block; }
+
+  /* ─── STATS ─── */
+  .formula-box {
+    background: var(--formula-bg);
+    color: var(--formula-fg);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    margin: 12px 0;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+  .formula-box .formula-label {
+    font-size: 10px;
+    color: var(--formula-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .callout {
+    background: var(--highlight);
+    border: 1px solid var(--gold-border);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .callout strong { color: var(--gold); }
+
+  /* ─── COMPARISON TABLE ─── */
+  .comp-intro {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .comp-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+  }
+
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 780px;
+  }
+
+  .comp-table thead th {
+    padding: 12px 14px;
+    text-align: left;
+    border-right: 1px solid rgba(255,255,255,0.12);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .comp-table thead th:first-child {
+    background: #9a3010;
+    color: #ffeedd;
+    min-width: 120px;
+    position: sticky;
+    left: 0;
+  }
+
+  .comp-table thead th:not(:first-child) {
+    background: var(--accent);
+    color: white;
+  }
+
+  .comp-table tbody td {
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+    font-size: 13px;
+  }
+
+  .comp-table tbody tr:nth-child(even) td:not(:first-child) {
+    background: var(--comp-row-alt);
+  }
+
+  .comp-table tbody td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-light);
+    border-right: 2px solid var(--accent-border);
+    white-space: nowrap;
+    position: sticky;
+    left: 0;
+  }
+
+  .ctag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin: 1px 1px 1px 0;
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+  .ctag.g {
+    background: var(--gold-light);
+    color: var(--gold);
+    border-color: var(--gold-border);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.6rem; }
+    .tab-btn { font-size: 11px; padding: 10px 4px; }
+    .exp-title { font-size: 0.9rem; }
+    .theme-toggle { top: 12px; right: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <div class="toggle-track"><div class="toggle-knob"></div></div>
+  <span class="toggle-label" id="toggle-label">Light</span>
+</button>
+
+<div class="container">
+
+  <header>
+    <div class="label">Psychology Lab Practicals</div>
+    <h1>Part A <span>ESE</span> Study Notes</h1>
+    <div class="exam-grid">
+      <div class="exam-chip">Plan &amp; Procedure <strong>10 pts</strong></div>
+      <div class="exam-chip">Common Discussion <strong>5 pts</strong></div>
+      <div class="exam-chip">Viva <strong>5 pts</strong></div>
+      <div class="exam-chip">Statistics <strong>5 pts</strong></div>
+    </div>
+  </header>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('experiments',this)">
+      Experiments 1–5
+      <span class="tab-pts">P P M P P I A order</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('compare',this)">
+      Compare All
+      <span class="tab-pts">Side-by-side table</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('viva',this)">
+      Viva Prep
+      <span class="tab-pts">5 pts</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('stats',this)">
+      Statistics
+      <span class="tab-pts">Chi-Square · 5 pts</span>
+    </button>
+  </div>
+
+  <!-- ══════════════ EXPERIMENTS TAB ══════════════ -->
+  <!-- ORDER: Problem → Plan → Materials → Precautions → Procedure → Instructions → Analysis+Table -->
+  <div id="tab-experiments" class="tab-content active">
+
+    <!-- EXP 1: 16PF -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 1</span>
+        <span class="exp-title">16 Personality Factor Questionnaire (16PF)</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <!-- P: Problem -->
+        <div class="section">
+          <div class="section-label">Problem / Aim</div>
+          <div class="plan-box">To assess the personality of the subject by administering 16 PF Form 'C'.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p>Devised by <u>Raymond B. Cattell</u>. An <u>objectively scorable test</u> that gives the most complete coverage of personality in a short time. Designed for <u>literate individuals aged 16 and above</u> whose educational level is roughly equivalent to that of the normal high school student.</p>
+          </div>
+          <div class="star-item">The test covers <u>16 dimensions of personality</u> — functionally independent and psychologically meaningful.</div>
+          <div class="star-item">Form C has <strong>105 items</strong> (8 items per factor for most, 6 for remaining scales, 7 for Factor B). Also has a <u>motivational distortion scale</u> and a <u>distortion scale</u> to minimise faking.</div>
+        </div>
+
+        <!-- P: Plan -->
+        <div class="section">
+          <div class="section-label">Plan</div>
+          <div class="plan-box">To administer the questionnaire to the subject and score the responses with the help of the key and interpret the scores using the norms.</div>
+        </div>
+
+        <!-- M: Materials -->
+        <div class="section">
+          <div class="section-label">Materials</div>
+          <div class="pill-row">
+            <span class="pill">16 PF Form 'C' questionnaire</span>
+            <span class="pill">Key</span>
+            <span class="pill">Answer sheet / Data sheet</span>
+            <span class="pill">Writing materials</span>
+          </div>
+        </div>
+
+        <!-- P: Precautions -->
+        <div class="section">
+          <div class="section-label">Precautions</div>
+          <ol class="steps">
+            <li>Subject should not waste time pondering over any question; answer as honestly as possible.</li>
+            <li>Subject should not leave any question unanswered.</li>
+            <li>For Factor B (Intelligence), the subject should be discouraged from giving the middle answer.</li>
+            <li>The subject must be assured about the confidentiality of the test results.</li>
+          </ol>
+        </div>
+
+        <!-- P: Procedure -->
+        <div class="section">
+          <div class="section-label">Procedure</div>
+          <ol class="steps">
+            <li>Seat the subject comfortably and establish <u>rapport</u>.</li>
+            <li>Present the 16 PF questionnaire and data sheet and read out the instructions.</li>
+            <li>Ask the subject to fill in the answer sheet. Scoring is done with the help of the key.</li>
+            <li>Raw scores are converted into a <u>sten score</u> which places the subject's scores in relation to scores obtained by other people in the defined population (normal adults, college students etc.). Corrections are made to the remaining sten scores according to the manual.</li>
+          </ol>
+        </div>
+
+        <!-- I: Instructions -->
+        <div class="section">
+          <div class="section-label">Instructions</div>
+          <div class="callout">
+            <em>"There are some questions to see what attitudes and interests you have. There are no right or wrong answers because every one has a right to their views. Answer them honestly in a separate answer sheet. There are three possible answers to each question. Fill in the left box if 'a', the middle box if 'b', right box if 'c'. Some may not apply to you but guess. Answers will be kept confidential, so do not hesitate to answer. Some may seem personal."</em>
+          </div>
+        </div>
+
+        <!-- A: Analysis + empty table -->
+        <div class="section">
+          <div class="section-label">Scoring &amp; Analysis</div>
+          <ol class="steps">
+            <li>Answer the 16 PF Form 'C' questionnaire.</li>
+            <li>Score the responses with the help of the key and interpret the scores using the norms.</li>
+            <li>Raw score must be converted into a sten score using the population norms. Sten scores of <strong>4, 5, 6 and 7</strong> indicate average; <strong>8, 9, 10</strong> = high; <strong>1, 2, 3</strong> = low.</li>
+            <li>Plot the sten scores on a graph to obtain a personality profile. Interpret each factor and assess the overall personality.</li>
+          </ol>
+          <div class="callout"><strong>MD Score:</strong> A low MD score indicates the subject is genuine; no need for corrections.</div>
+          <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Individual Results (Source Traits)</p>
+          <table class="data-table">
+            <tr>
+              <th>Name</th><th>A</th><th>B</th><th>C</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>L</th><th>M</th><th>N</th><th>O</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>M.D</th>
+            </tr>
+            <tr>
+              <td>Raw Score</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>Sten Score</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EXP 2: Anxiety -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 2</span>
+        <span class="exp-title">Assessment of Anxiety</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <!-- P: Problem -->
+        <div class="section">
+          <div class="section-label">Problem / Aim</div>
+          <div class="plan-box">To assess the level of anxiety through Anxiety Scale Self Analysis Form.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p>Anxiety has been defined as a <u>"state of arousal"</u> caused by threat to the well-being (Spielberg 1960). <u>"State"</u> = condition involving the entire organism. <u>"Arousal"</u> = condition of tension/unrest. <u>"Threat"</u> = anticipation of pain or danger.</p>
+          </div>
+          <div class="star-item">Anxiety manifests in three ways: (a) Through a <u>conscious state of discomfort and apprehension</u>; (b) Through <u>visceral disturbances</u> especially of digestive and <u>circulatory systems</u>; (c) Through <u>motor symptoms</u> — restlessness, trembling, <u>irritability</u> and the like.</div>
+          <div class="star-item">Scale: <u>Anxiety Scale developed by Krug, Scheier and R.B. Cattell</u>, first published in 1957. Includes the best <u>40 anxiety items</u> among several thousand personality items. Updated in 1976 for language changes.</div>
+          <div class="star-item">Sten 4–7 = average anxiety · Sten 1–3 = unusually relaxed/phlegmatic · Sten 8 = getting serious · Sten 9–10 = serious (found in 1 in 20 cases).</div>
+        </div>
+
+        <!-- P: Plan -->
+        <div class="section">
+          <div class="section-label">Plan</div>
+          <div class="plan-box">To administer the anxiety scale to the subject, score the responses and interpret the scores.</div>
+        </div>
+
+        <!-- M: Materials -->
+        <div class="section">
+          <div class="section-label">Materials</div>
+          <div class="pill-row">
+            <span class="pill">Anxiety Scale Questionnaire (Krug, Scheier &amp; R.B. Cattell)</span>
+            <span class="pill">Key and Norms</span>
+            <span class="pill">Writing Materials</span>
+          </div>
+        </div>
+
+        <!-- P: Precautions -->
+        <div class="section">
+          <div class="section-label">Precautions</div>
+          <ol class="steps">
+            <li>Effort should be made to secure the true answer from the subject.</li>
+            <li>If the subject fails to understand the meaning of any question, the experimenter should explain it.</li>
+            <li>All questions should be answered and there has to be only one answer for each question.</li>
+          </ol>
+        </div>
+
+        <!-- P: Procedure -->
+        <div class="section">
+          <div class="section-label">Procedure</div>
+          <ol class="steps">
+            <li>Seat the subject comfortably. Establish rapport. Give a copy of the anxiety scale booklet.</li>
+            <li>The test is not timed but <u>typically requires about 10 minutes</u> for a subject of average reading ability who is not excessively disturbed. Anyone taking an unusually long time should be reminded that the 'first response' to each question is what is needed.</li>
+            <li>Read out the instructions to the subject.</li>
+            <li>Score the responses using the key and determine the anxiety level.</li>
+          </ol>
+        </div>
+
+        <!-- I: Instructions -->
+        <div class="section">
+          <div class="section-label">Instructions</div>
+          <div class="callout">
+            <em>"Inside this booklet there are 40 statements about how most people feel or think at one time or another. There are no right or wrong answers. Just pick the one that is really true for you and mark 'a', 'b' or 'c'."</em>
+          </div>
+        </div>
+
+        <!-- A: Analysis + empty table -->
+        <div class="section">
+          <div class="section-label">Analysis of Data</div>
+          <ol class="steps">
+            <li>Score the subject's answers using the key.</li>
+            <li>Scores have to be added for A and B separately.</li>
+            <li>Total the A and B scores (A + B). Use the total to determine the sten score and percentile from the norms and interpret the level of anxiety.
+              <br><br>
+              <strong>(A) <u>Covert – Unrealized Anxiety</u></strong> — subject is <em>unaware</em> of the symptoms of anxiety.<br>
+              <strong>(B) <u>Overt – Symptomatic conscious anxiety</u></strong> — manifest anxiety where subject is <em>aware</em> of their anxiousness.
+            </li>
+          </ol>
+          <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE I — Raw score, Sten score and Percentile</p>
+          <table class="data-table">
+            <tr><th>Name</th><th>Score A</th><th>Score B</th><th>Total Score (A+B)</th><th>Sten Score</th><th>Percentile</th><th>Interpretation</th></tr>
+            <tr><td style="height:36px;"></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EXP 3: GHQ -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 3</span>
+        <span class="exp-title">General Health Questionnaire (GHQ)</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <!-- P: Problem -->
+        <div class="section">
+          <div class="section-label">Problem / Aim</div>
+          <div class="plan-box">To assess presence of Psychological Morbidity in the subject.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p>Scaled GHQ is a <u>28-item questionnaire</u>, a <u>modified version of GHQ of Goldberg and Hillier (1972)</u>, used as a first stage screening method for the general population.</p>
+          </div>
+          <div class="star-item">Four sub-tests: (a) Somatic Symptoms, (b) Anxiety and Insomnia, (c) Social Dysfunction, (d) Severe Depression.</div>
+          <div class="star-item">Quick method to identify <u>"Possible Psychiatric cases"</u> in the community. Emphasis on the <u>"here and now"</u> — subjects are asked about present and recent complaints, not those they had in the past.</div>
+        </div>
+
+        <!-- P: Plan -->
+        <div class="section">
+          <div class="section-label">Plan</div>
+          <div class="plan-box">Administer the GHQ and find out the total score of the subject and interpret with reference to the norms.</div>
+        </div>
+
+        <!-- M: Materials -->
+        <div class="section">
+          <div class="section-label">Materials</div>
+          <div class="pill-row">
+            <span class="pill">General Health Questionnaire (GHQ)</span>
+            <span class="pill">Manual and Scoring Key</span>
+            <span class="pill">Writing Materials</span>
+          </div>
+        </div>
+
+        <!-- P: Precautions -->
+        <div class="section">
+          <div class="section-label">Precautions</div>
+          <ol class="steps">
+            <li>Subject should focus on present and recent complaints, not those they had in the past.</li>
+            <li>It is important that the subject tries to answer all the questions.</li>
+            <li>Subject should be reminded that there are no right or wrong answers — just what applies to them recently.</li>
+          </ol>
+        </div>
+
+        <!-- P: Procedure -->
+        <div class="section">
+          <div class="section-label">Procedure</div>
+          <ol class="steps">
+            <li>Seat the subject comfortably and give a copy of GHQ. Give the instructions to the subject.</li>
+            <li>The questionnaire is usually <u>completed in 10 to 15 minutes</u>.</li>
+            <li>After the subject completes the questionnaire, the experimenter scores the responses under the four problem areas. Each statement has 4 alternative choices (a, b, c, d).</li>
+          </ol>
+        </div>
+
+        <!-- I: Instructions -->
+        <div class="section">
+          <div class="section-label">Instructions</div>
+          <div class="callout">
+            <em>"I would like to know if you had any medical complaint and how your health has been in general over the past few weeks. Answer questions simply by putting a tick mark (✓) for the alternative which you think most applies to you. Remember that I want to know about present and recent complaints, and not those that you had in the past. It is important that you try to answer all the questions."</em>
+          </div>
+        </div>
+
+        <!-- A: Analysis + empty table -->
+        <div class="section">
+          <div class="section-label">Analysis of Results</div>
+          <ol class="steps">
+            <li>A score of <u>zero is given to the first two answers (a and b)</u> and a score of <u>one is given to the remaining two answers (c and d)</u>.</li>
+            <li>The number of items identified by the subject is found out. Add the raw scores in all four dimensions.</li>
+            <li><u>Individuals with a total score of 5 and above</u> are considered to be possible cases of psychological morbidity (i.e. likely to become possible psychiatric cases if symptoms continue unabated).</li>
+          </ol>
+          <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE I — Number of problems identified by subject in each sub-scale</p>
+          <table class="data-table">
+            <tr><th>Name</th><th>Somatic Symptoms</th><th>Anxiety &amp; Insomnia</th><th>Social Dysfunction</th><th>Severe Depression</th><th>Total Score</th></tr>
+            <tr><td style="height:36px;"></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EXP 4: CIS -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 4</span>
+        <span class="exp-title">Comprehensive Interest Schedule (CIS)</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <!-- P: Problem -->
+        <div class="section">
+          <div class="section-label">Problem / Aim</div>
+          <div class="plan-box">To assess subject's relative interest in occupational areas using the Comprehensive Interest Schedule.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p>Developed by <u>Sanjay Vohra</u>. Useful for counselling students about career choices; also applicable to adults for selection and placement in industrial settings. Represents relative interest in <u>8 broad vocational areas</u> and <u>14 occupational interests</u>.</p>
+          </div>
+          <div class="star-item">Interest has more to do with whether a task is attempted with motivation rather than how well it is performed. Interest ratings are better indices of <u>job persistence</u> rather than job success.</div>
+        </div>
+
+        <!-- P: Plan -->
+        <div class="section">
+          <div class="section-label">Plan</div>
+          <div class="plan-box">To obtain the subject's preferences for various occupations, score the preferences, convert the scores into sten scores which are interpreted, and used to draw the subject's interest profile for 14 occupational interests.</div>
+        </div>
+
+        <!-- M: Materials -->
+        <div class="section">
+          <div class="section-label">Materials</div>
+          <div class="pill-row">
+            <span class="pill">CIS form by Sanjay Vohra</span>
+            <span class="pill">Norms</span>
+            <span class="pill">Writing materials</span>
+          </div>
+        </div>
+
+        <!-- P: Precautions -->
+        <div class="section">
+          <div class="section-label">Precautions</div>
+          <ol class="steps">
+            <li>Instructions to the subject should be clear, to enable the subject to mark their preferences accurately.</li>
+            <li>The subject should be encouraged to respond honestly, and to consider the occupations irrespective of the income or status involved.</li>
+            <li>Ask the subject to work rapidly.</li>
+          </ol>
+        </div>
+
+        <!-- P: Procedure -->
+        <div class="section">
+          <div class="section-label">Procedure</div>
+          <ol class="steps">
+            <li>Seat subject comfortably and place the CIS form in front of the subject. Using the examples on the first page, instruct the subject.</li>
+            <li>Occupations are given in pairs. The subject draws a circle around the number of the occupation they prefer in each pair. They may choose one, both or none. Do not consider income or status — only the work involved.</li>
+            <li>When the subject has understood the instructions, ask them to open the schedule and mark their preferences. There is no time limit, but it should be pointed out that results will probably be better if they work rapidly.</li>
+            <li>After the subject has finished responding, score the preferences, convert into sten scores and draw the subject's interest profile.</li>
+          </ol>
+          <div class="callout"><strong>Sten score interpretation:</strong> 8–10 = High Interest · 4–7 = Average Interest · 1–3 = Low Interest</div>
+        </div>
+
+        <!-- I: Instructions -->
+        <div class="section">
+          <div class="section-label">Instructions</div>
+          <div class="callout">
+            <em>"You have to mark your preference for different occupations in this schedule. These occupations are given in pairs and you have to indicate your preference by circling a number. You can circle both items in a pair if you like both, otherwise circle one. If you dislike both you can cross out both numbers. Mark your preferences without considering the income or status involved in each occupation. There is no time limit, but work quickly as your first impression is more likely to give a true picture of your likes and dislikes."</em>
+          </div>
+        </div>
+
+        <!-- A: Analysis + empty table -->
+        <div class="section">
+          <div class="section-label">Analysis</div>
+          <ol class="steps">
+            <li>Count the number of circles around 'ones' in each of the columns and enter the number at the bottom of each column.</li>
+            <li>Count the number of circles around 'twos' in each of the rows and enter the number at the side of each column.</li>
+            <li>Transfer those scores onto the CIS Profile sheet. Obtain the total raw score for each occupation by adding the scores for 'ones' and 'twos'. The <u>maximum raw score possible for each field is 28</u>.</li>
+            <li>Using the norms, convert the raw scores into sten scores and interpret the subject's interest level in each of the fourteen fields.</li>
+            <li>The sten scores are used to draw the subject's Interest profile.</li>
+          </ol>
+          <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Subject's Interest Profile (Sten Scores)</p>
+          <table class="data-table">
+            <tr><th>Name</th><th>Influential</th><th>Venturous</th><th>Artistic</th><th>Scientific</th><th>Analytical</th><th>Social</th><th>Nature</th><th>Clerical</th></tr>
+            <tr><td>Raw Score</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Sten Score</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EXP 4 discussion block (was split) preserved below as EXP 4 discussion -->
+    <!-- EXP 5: EMS -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 5</span>
+        <span class="exp-title">Emotional Maturity Scale (EMS)</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <!-- P: Problem -->
+        <div class="section">
+          <div class="section-label">Problem / Aim</div>
+          <div class="plan-box">To assess the emotional maturity of the subject using the Emotional Maturity Scale.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p><u>Emotional maturity is a state of having reached an adult level of emotional development which implies emotional control in social situations.</u></p>
+            <p>According to Walter D. Smitson (1974), emotional maturity is a process in which the personality is continuously striving for greater sense of emotional health, both intra-psychically and inter-personally.</p>
+          </div>
+          <div class="star-item">According to <u>Cote (1944)</u> the most outstanding mark of emotional maturity is the <u>ability to bear tension</u>.</div>
+          <div class="star-item">Kaplan and Baron: an emotionally mature person (a) can withstand <u>delay in satisfaction of needs (delayed gratification)</u>; (b) tolerates frustration; (c) believes in long-term planning; (d) can delay or revise expectations as the situation demands.</div>
+          <div class="star-item">Scale developed by <u>Dr. Yashvir Singh and Dr. Mahesh Bhargava</u>. Assesses emotional maturity across <strong>5 areas</strong>: (A) Emotional Stability, (B) Emotional Progression, (C) Social Adjustment, (D) Personality Integration, (E) Independence.</div>
+          <table class="data-table" style="margin-top:12px;">
+            <tr><th>Scale</th><th>What it means</th></tr>
+            <tr><td><strong>A – Emotional Stability</strong></td><td>Does not react excessively to changes in moods. Instability = quick mood changes, irritability, temper tantrums, lack of capacity to solve problems.</td></tr>
+            <tr><td><strong>B – Emotional Progression</strong></td><td>Growing vitality and adequacy. Regression = inferiority, restlessness, hostility, aggressiveness, self-centeredness.</td></tr>
+            <tr><td><strong>C – Social Adjustment</strong></td><td>Integration between personal needs and social environment demands. Poor adjustment = lack of adaptability, hatred, seclusion, shrinking responsibility.</td></tr>
+            <tr><td><strong>D – Personality Integration</strong></td><td>Firmly unifying diverse elements of one's motives. Disintegration = phobia, pessimism, immorality, distorted sense of reality.</td></tr>
+            <tr><td><strong>E – Independence</strong></td><td>Capacity to be self-reliant using intellectual and creative potentialities. Dependent person shows parasitic dependence on others.</td></tr>
+          </table>
+        </div>
+
+        <!-- P: Plan -->
+        <div class="section">
+          <div class="section-label">Plan</div>
+          <div class="plan-box">To administer the Emotional Maturity Scale to the subject, find out the total score, and interpret the result using the norms.</div>
+        </div>
+
+        <!-- M: Materials -->
+        <div class="section">
+          <div class="section-label">Materials</div>
+          <div class="pill-row">
+            <span class="pill">Emotional Maturity Scale</span>
+            <span class="pill">Norms and Key</span>
+            <span class="pill">Writing materials</span>
+          </div>
+        </div>
+
+        <!-- P: Precautions -->
+        <div class="section">
+          <div class="section-label">Precautions</div>
+          <ol class="steps">
+            <li>The experimenter should make sure that the subject has understood the instructions.</li>
+            <li>The subject should be encouraged to be honest and spontaneous while giving the responses.</li>
+            <li>The subject should interpret the questions by themselves. The experimenter should make sure the responses are not influenced by the experimenter.</li>
+            <li>The subject must be given the meaning of difficult words if asked.</li>
+          </ol>
+        </div>
+
+        <!-- P: Procedure -->
+        <div class="section">
+          <div class="section-label">Procedure</div>
+          <ol class="steps">
+            <li>Seat the subject comfortably and give them a copy of the Emotional Maturity Scale including the personal data.</li>
+            <li>Give the instructions are given to the subject. The experimenter can help the subject understand the meaning of difficult words. Takes around <u>15–20 minutes</u> to complete.</li>
+            <li>After the subject completes the test, the responses are scored and the total score is compared to the norms to determine the emotional stability of the subject.</li>
+          </ol>
+          <div class="callout"><strong>Total score interpretation:</strong> 50–79 = Extremely stable · 80–88 = Moderately stable · 89–106 = Unstable · 107–240 = Extremely unstable</div>
+        </div>
+
+        <!-- I: Instructions -->
+        <div class="section">
+          <div class="section-label">Instructions</div>
+          <div class="callout">
+            <em>"In the following pages there are forty eight statements about yourself. Fix possible modes of responses are provided, such as 'Very Much', 'Much', 'Undecided', 'Probably' and 'Never'. Read each question carefully and mark tick in any one of the five possible modes. There are no right or wrong answers, so answer honestly and respond to all statements spontaneously. Try and respond to all statements. Be kept confident."</em>
+          </div>
+        </div>
+
+        <!-- A: Analysis + empty table -->
+        <div class="section">
+          <div class="section-label">Analysis of Results</div>
+          <ol class="steps">
+            <li>The responses of the subject are scored as follows:<br>
+              Very much = 5 · Much = 4 · Undecided = 3 · Probably = 2 · Never = 1
+            </li>
+            <li>Find out the total score of the subject. This is referred to the norms and interpreted.</li>
+            <li>Also find out the score on each of the five sub-scales (A, B, C, D, E) and interpret using the sub-scale norms.</li>
+          </ol>
+          <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Scores across the 5 areas</p>
+          <table class="data-table">
+            <tr><th>Name</th><th>A — Emotional Stability</th><th>B — Emotional Progression</th><th>C — Social Adjustment</th><th>D — Personality Integration</th><th>E — Independence</th><th>Total Score</th><th>Interpretation</th></tr>
+            <tr><td>Score</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Interpretation</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /experiments tab -->
+
+  <!-- ══════════════ COMPARE TAB ══════════════ -->
+  <div id="tab-compare" class="tab-content">
+
+    <p class="comp-intro">Scroll horizontally if needed. All 5 experiments compared side by side.</p>
+
+    <div class="comp-wrapper">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th>EXP 1 — 16PF</th>
+            <th>EXP 2 — Anxiety</th>
+            <th>EXP 3 — GHQ</th>
+            <th>EXP 4 — CIS</th>
+            <th>EXP 5 — EMS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Full Name</td>
+            <td>Sixteen Personality Factor Questionnaire</td>
+            <td>Anxiety Scale Self Analysis Form</td>
+            <td>General Health Questionnaire</td>
+            <td>Comprehensive Interest Schedule</td>
+            <td>Emotional Maturity Scale</td>
+          </tr>
+          <tr>
+            <td>Developed by</td>
+            <td><u>Raymond B. Cattell</u></td>
+            <td><u>Krug, Scheier &amp; R.B. Cattell</u> (1957)</td>
+            <td><u>Goldberg &amp; Hillier</u> (1972) — scaled version</td>
+            <td><u>Sanjay Vohra</u></td>
+            <td><u>Dr. Yashvir Singh &amp; Dr. Mahesh Bhargava</u></td>
+          </tr>
+          <tr>
+            <td>Purpose / Plan</td>
+            <td>Assess <strong>personality</strong> across 16 dimensions</td>
+            <td>Assess <strong>level of anxiety</strong></td>
+            <td>Assess presence of <strong>psychological morbidity</strong></td>
+            <td>Assess relative <strong>occupational interests</strong></td>
+            <td>Assess <strong>emotional maturity</strong> across 5 areas</td>
+          </tr>
+          <tr>
+            <td>No. of Items</td>
+            <td>105 items (Form C)</td>
+            <td>40 items</td>
+            <td>28 items</td>
+            <td>Occupations in pairs<br>(max raw score per field = 28)</td>
+            <td>48 statements</td>
+          </tr>
+          <tr>
+            <td>Response Format</td>
+            <td>a / b / c</td>
+            <td>a / b / c</td>
+            <td>a / b / c / d<br>(a&amp;b = 0, c&amp;d = 1)</td>
+            <td>Circle 1, 2, both, or cross out</td>
+            <td>Very Much / Much / Undecided / Probably / Never<br>(scored 5–1)</td>
+          </tr>
+          <tr>
+            <td>Time Required</td>
+            <td>Not specified</td>
+            <td>~10 minutes</td>
+            <td>10–15 minutes</td>
+            <td>No time limit<br>(work rapidly)</td>
+            <td>15–20 minutes</td>
+          </tr>
+          <tr>
+            <td>Sub-scales / Dimensions</td>
+            <td>16 factors (A–Q4) + MD (Motivational Distortion) scale</td>
+            <td>A = <u>Covert (Unrealized)</u> Anxiety<br>B = <u>Overt (Conscious)</u> Anxiety</td>
+            <td>Somatic Symptoms · Anxiety &amp; Insomnia · Social Dysfunction · Severe Depression</td>
+            <td>8 broad vocational areas (Influential, Venturous, Artistic, Scientific, Analytical, Social, Nature, Clerical)</td>
+            <td>A = Emotional Stability · B = Emotional Progression · C = Social Adjustment · D = Personality Integration · E = Independence</td>
+          </tr>
+          <tr>
+            <td>Scoring Method</td>
+            <td>Raw score → Sten score (via manual)</td>
+            <td>A and B scored separately → Total → Sten score + Percentile</td>
+            <td>Add raw scores across 4 sub-scales</td>
+            <td>Count ones + twos → Total raw score → Sten score</td>
+            <td>Add all responses (5–1) → Total score → compare with norms</td>
+          </tr>
+          <tr>
+            <td>Key Interpretation</td>
+            <td>Sten 4–7 = Average<br>8–10 = High<br>1–3 = Low</td>
+            <td>Sten 4–7 = Average<br>1–3 = Relaxed<br>8 = Serious<br>9–10 = Very serious (1 in 20)</td>
+            <td>Score ≥ 5 = Possible Psychiatric Case</td>
+            <td>Sten 8–10 = High<br>4–7 = Average<br>1–3 = Low</td>
+            <td>50–79 = Extremely stable<br>80–88 = Moderately stable<br>89–106 = Unstable<br>107–240 = Extremely unstable</td>
+          </tr>
+          <tr>
+            <td>Subject VA's Score</td>
+            <td>Average sten across most factors; MD score low (genuine)</td>
+            <td>Total = 36, Sten = 7, Percentile = 77<br><span class="ctag g">Average Anxiety</span></td>
+            <td>Total = 4 (below cut-off of 5)<br><span class="ctag g">Not a possible case</span></td>
+            <td>High: Artistic/Creative<br>Average: Influential, Venturous, Scientific, Social, Nature<br>Low: Clerical</td>
+            <td>Total = 87<br><span class="ctag g">Moderately Stable</span><br>A=20(unstable), B=17, C=26(unstable), D=10(ex.stable), E=14</td>
+          </tr>
+          <tr>
+            <td>Group Result</td>
+            <td>—</td>
+            <td>Mean sten = 8, Mean percentile = 89<br><span class="ctag">Serious Anxiety</span></td>
+            <td>Mean GHQ = 9.57; 5/7 above cut-off<br><span class="ctag">Morbidity Present</span></td>
+            <td>—</td>
+            <td>Mean score = 117.42, Range = 69<br><span class="ctag">Extremely Unstable</span></td>
+          </tr>
+          <tr>
+            <td>Special Notes</td>
+            <td>Factor B = Intelligence (6 items, correct/incorrect format). MD scale detects faking.</td>
+            <td>Items updated in 1976 for language changes.</td>
+            <td>"Here and now" focus. Used for community mental health screening.</td>
+            <td>Interest = job persistence, not job success. Rate without regard for income/status.</td>
+            <td>Ability to bear tension = most outstanding mark of emotional maturity (Cote, 1944).</td>
+          </tr>
+          <tr>
+            <td>Target Population</td>
+            <td>Literate individuals, 16 years and above</td>
+            <td>General population</td>
+            <td>General population; community mental health surveys</td>
+            <td>High school &amp; college students; adults in industrial settings</td>
+            <td>General population</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /compare tab -->
+
+  <!-- ══════════════ VIVA TAB ══════════════ -->
+  <div id="tab-viva" class="tab-content">
+
+    <div style="margin-bottom:20px;">
+      <div class="section-label">Likely Viva Questions — click to reveal answer</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is the 16PF and who developed it? <span class="viva-q-tag">EXP 1</span></div>
+      <div class="viva-a">The 16PF was devised by Raymond B. Cattell. It is an objectively scorable test giving the most complete coverage of personality in a brief time. Designed for literate individuals aged 16 and above. Covers 16 functionally independent and psychologically meaningful dimensions of personality.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is a sten score? <span class="viva-q-tag">EXP 1</span></div>
+      <div class="viva-a">Sten = "Standard Ten." Raw scores are converted into sten scores (1–10) distributed over ten equal interval standard deviations. Sten scores of 4, 5, 6 and 7 indicate average; 8, 9, 10 indicate high scores; 1, 2, 3 indicate low scores.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What does Factor B in 16PF measure? <span class="viva-q-tag">EXP 1</span></div>
+      <div class="viva-a">Factor B measures Intelligence. It has only 6 items (not 8) and uses a correct/incorrect format. The subject should not be encouraged to use the middle answer for Factor B.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is the Motivational Distortion (MD) scale? <span class="viva-q-tag">EXP 1</span></div>
+      <div class="viva-a">The MD scale minimises distortion and ensures variety and interest. It ensures the subject realises the importance of careful and truthful responses. A low MD score indicates the subject answered genuinely — no corrections needed.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">Define anxiety. What are its three manifestations? <span class="viva-q-tag">EXP 2</span></div>
+      <div class="viva-a">Anxiety has been defined as a "state of arousal" caused by threat to the well-being (Spielberg 1960). Manifests in three ways: (a) Through a conscious state of discomfort and apprehension; (b) Through visceral disturbances especially of digestive and circulatory systems; (c) Through motor symptoms — restlessness, trembling, irritability and the like.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is the difference between Covert and Overt Anxiety? <span class="viva-q-tag">EXP 2</span></div>
+      <div class="viva-a">Covert Anxiety (A) = Unrealized Anxiety — the subject is unaware of the symptoms. Overt Anxiety (B) = Symptomatic conscious / manifest anxiety — the subject is aware of their anxiousness.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What are the four sub-scales of the GHQ? <span class="viva-q-tag">EXP 3</span></div>
+      <div class="viva-a">(a) Somatic Symptoms, (b) Anxiety and Insomnia, (c) Social Dysfunction, (d) Severe Depression. A total score of 5 and above indicates possible psychological morbidity.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What cut-off score indicates psychological morbidity on the GHQ? <span class="viva-q-tag">EXP 3</span></div>
+      <div class="viva-a">Individuals with a total score of 5 and above are considered to be possible cases of psychological morbidity — i.e. likely to become possible psychiatric cases if symptoms continue unabated.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What does the CIS measure and who developed it? <span class="viva-q-tag">EXP 4</span></div>
+      <div class="viva-a">The Comprehensive Interest Schedule was developed by Sanjay Vohra. It measures relative interest in 8 broad vocational areas and 14 occupational interests. Useful for career counselling with students and for selection/placement in industrial settings.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is the maximum raw score for each CIS field? <span class="viva-q-tag">EXP 4</span></div>
+      <div class="viva-a">The maximum raw score possible for each field is 28. Obtained by adding the scores for 'ones' and 'twos' from the CIS form.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">Define emotional maturity. Who developed the EMS? <span class="viva-q-tag">EXP 5</span></div>
+      <div class="viva-a">Emotional maturity is a state of having reached an adult level of emotional development which implies emotional control in social situations. The EMS was developed by Dr. Yashvir Singh and Dr. Mahesh Bhargava. It assesses emotional maturity across 5 dimensions: Emotional Stability, Emotional Progression, Social Adjustment, Personality Integration, and Independence.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What is the most outstanding mark of emotional maturity according to Cote (1944)? <span class="viva-q-tag">EXP 5</span></div>
+      <div class="viva-a">According to Cote (1944), the most outstanding mark of emotional maturity is the ability to bear tension.</div>
+    </div>
+
+    <div class="viva-item">
+      <div class="viva-q" onclick="toggleViva(this)">What are the EMS scoring categories? <span class="viva-q-tag">EXP 5</span></div>
+      <div class="viva-a">Total score interpretation: 50–79 = Extremely stable · 80–88 = Moderately stable · 89–106 = Unstable · 107–240 = Extremely unstable. Each response scored: Very much = 5, Much = 4, Undecided = 3, Probably = 2, Never = 1.</div>
+    </div>
+
+  </div><!-- /viva tab -->
+
+  <!-- ══════════════ STATS TAB ══════════════ -->
+  <div id="tab-stats" class="tab-content">
+
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">STATS</span>
+        <span class="exp-title">Non-Parametric Methods — Chi Square (χ²)</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+
+        <div class="section">
+          <div class="section-label">When to use Non-Parametric Methods</div>
+          <div class="disc-text">
+            <p>When N is small or data is badly skewed, the assumption of normality is doubtful and parametric methods are of dubious value. Non-parametric (distribution-free) methods allow us to compare samples and make inferences <strong>without having to assume normality</strong>.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Chi Square</div>
+          <div class="disc-text">
+            <p>The <u>Chi-square (χ²) test</u> represents a useful method of comparing experimentally obtained results with those to be expected theoretically on some hypothesis.</p>
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">Chi-Square Formula</div>
+            χ² = Σ [ (fo - fe)² / fe ]
+          </div>
+          <div class="callout">
+            <strong>fo</strong> = frequency of observed or experimentally determined facts<br>
+            <strong>fe</strong> = expected frequency of occurrence on some hypothesis
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">How it works</div>
+          <ol class="steps">
+            <li>Differences between observed and expected frequencies are squared and divided by the expected number in each case.</li>
+            <li>Sum of these quotients = χ². Smaller χ² = observed results closer to expected.</li>
+            <li>Larger χ² = greater probability of real divergence from expected results.</li>
+            <li>To evaluate, enter Table E with computed χ² and degrees of freedom.</li>
+            <li>df = (r-1)(c-1) where r = number of rows, c = number of columns.</li>
+          </ol>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Interpretation Rules</div>
+          <div class="star-item">If chi-square value is <strong>greater than table value</strong> → null hypothesis is rejected, but significance of trend is present.</div>
+          <div class="star-item">If chi-square value is <strong>lesser than table value</strong> → null hypothesis is accepted, no significant trend indicated.</div>
+          <div class="star-item">If chi-square value is <strong>between 0.05 and 0.01 table values</strong> → hypothesis rejected at 0.05 level, but at 0.01 level accepted.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Worked Example (Part A — Stats)</div>
+          <div class="disc-text">
+            <p>75 subjects were asked — "Should dresscode be enforced in college?" 50 answered No, 15 answered Yes, 10 Undecided. Does the result indicate a significant trend of opinion?</p>
+          </div>
+          <table class="data-table">
+            <tr><th></th><th>No</th><th>Yes</th><th>Undecided</th><th>Total</th></tr>
+            <tr><td>Observed (fo)</td><td>50</td><td>15</td><td>10</td><td>75</td></tr>
+            <tr><td>Expected (fe)</td><td>25</td><td>25</td><td>25</td><td>75</td></tr>
+            <tr><td>(fo - fe)</td><td>25</td><td>-10</td><td>-15</td><td>—</td></tr>
+            <tr><td>(fo - fe)²</td><td>625</td><td>100</td><td>225</td><td>—</td></tr>
+            <tr><td>(fo - fe)² / fe</td><td>25</td><td>4</td><td>9</td><td><strong>38</strong></td></tr>
+          </table>
+          <div class="formula-box">
+            χ² = Σ [ (fo - fe)² / fe ] = 38<br><br>
+            df = (row-1)(column-1) = (2-1)(3-1) = 2<br><br>
+            At 0.01 level → 9.21 &nbsp;|&nbsp; At 0.05 level → 5.99
+          </div>
+          <div class="callout">
+            <strong>Conclusion:</strong> χ² = 38 is greater than both 9.21 and 5.99 at 0.01 and 0.05 levels of significance. Therefore, null hypothesis is rejected, but significance of trend is present.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Textbook Example (reference)</div>
+          <div class="disc-text">
+            <p>48 subjects asked about joining a Nations organisation for control of atomic power — 24 Favourable, 12 Indifferent, 12 Unfavourable. χ² computed = 6. With df = 2, table values: 0.05 = 5.991, 0.01 = 9.21. The obtained χ² of 6 is greater than 5.990 but less than 9.21. Hence the null hypothesis is rejected at the 0.05 level and not at the 0.01 level.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /stats tab -->
+
+</div><!-- /container -->
+
+<script>
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleExp(header) {
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+  }
+
+  function toggleViva(el) {
+    el.nextElementSibling.classList.toggle('open');
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('toggle-label').textContent = isDark ? 'Light' : 'Dark';
+    localStorage.setItem('psych-theme', isDark ? 'light' : 'dark');
+  }
+
+  // Restore saved theme on load
+  (function() {
+    const saved = localStorage.getItem('psych-theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.getElementById('toggle-label').textContent = 'Dark';
+    }
+  })();
+
+  // Open first exp card by default
+  document.querySelector('.exp-header').click();
+</script>
+</body>
+</html>
