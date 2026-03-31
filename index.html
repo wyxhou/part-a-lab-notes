@@ -268,15 +268,18 @@
   .steps { counter-reset: step; list-style: none; }
   .steps li {
     counter-increment: step;
-    display: flex;
-    gap: 12px;
+    position: relative;
+    padding-left: 36px;
     margin-bottom: 10px;
     font-size: 14px;
-    align-items: flex-start;
+    line-height: 1.7;
   }
   .steps li::before {
     content: counter(step);
-    min-width: 24px; height: 24px;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 24px; height: 24px;
     background: var(--accent);
     color: white;
     border-radius: 50%;
@@ -286,8 +289,6 @@
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     font-weight: 500;
-    flex-shrink: 0;
-    margin-top: 1px;
   }
 
   u { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
@@ -296,19 +297,19 @@
     background: var(--accent-light);
     border: 1px solid var(--accent-border);
     border-radius: 6px;
-    padding: 10px 14px;
+    padding: 10px 14px 10px 30px;
     margin-bottom: 8px;
     font-size: 14px;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
+    position: relative;
+    line-height: 1.7;
   }
   .star-item::before {
     content: '★';
     color: var(--accent);
     font-size: 12px;
-    margin-top: 2px;
-    flex-shrink: 0;
+    position: absolute;
+    left: 12px;
+    top: 12px;
   }
 
   .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
@@ -621,12 +622,13 @@
         <div class="section">
           <div class="section-label">Scoring &amp; Analysis</div>
           <ol class="steps">
-            <li>Answer the 16 PF Form 'C' questionnaire.</li>
-            <li>Score the responses with the help of the key and interpret the scores using the norms.</li>
-            <li>Raw score must be converted into a sten score using the population norms. Sten scores of <strong>4, 5, 6 and 7</strong> indicate average; <strong>8, 9, 10</strong> = high; <strong>1, 2, 3</strong> = low.</li>
-            <li>Plot the sten scores on a graph to obtain a personality profile. Interpret each factor and assess the overall personality.</li>
+            <li>Score the subject's responses with the help of the key. Each answer scores <strong>0, 1, or 2 points</strong>, except for <u>Factor B (Intelligence)</u> which uses a correct/incorrect format.</li>
+            <li>Find out the total raw score for each of the 16 factors separately using the scoring key.</li>
+            <li>Convert each raw score into a <u>sten score</u> (Standard Ten) using the population norms (normal adults, college students etc.). <strong>Sten 4–7 = Average · 8–10 = High · 1–3 = Low.</strong></li>
+            <li><strong>MD Score check:</strong> If the M.D. sten score is <u>7 and above</u>, corrections must be made to the remaining sten scores per the manual. A low MD score indicates the subject answered genuinely — no corrections needed.</li>
+            <li>Plot all sten scores on a graph to obtain a <u>personality profile</u>. Interpret each factor separately and assess the overall personality of the subject.</li>
           </ol>
-          <div class="callout"><strong>MD Score:</strong> A low MD score indicates the subject is genuine; no need for corrections.</div>
+          <div class="callout"><strong>Sten Norms (Standard Ten):</strong> Sten 4–7 = Average · 8–10 = High · 1–3 = Low.<br>⚠ If MD sten ≥ 7, apply corrections to remaining scores as per the manual.</div>
           <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Individual Results (Source Traits)</p>
           <table class="data-table">
             <tr>
@@ -714,14 +716,21 @@
         <div class="section">
           <div class="section-label">Analysis of Data</div>
           <ol class="steps">
-            <li>Score the subject's answers using the key.</li>
-            <li>Scores have to be added for A and B separately.</li>
-            <li>Total the A and B scores (A + B). Use the total to determine the sten score and percentile from the norms and interpret the level of anxiety.
+            <li>Score the subject's answers using the key. Each item is scored according to the key provided with the scale.</li>
+            <li>Scores have to be added <strong>for A and B separately</strong>:
               <br><br>
               <strong>(A) <u>Covert – Unrealized Anxiety</u></strong> — subject is <em>unaware</em> of the symptoms of anxiety.<br>
-              <strong>(B) <u>Overt – Symptomatic conscious anxiety</u></strong> — manifest anxiety where subject is <em>aware</em> of their anxiousness.
+              <strong>(B) <u>Overt – Symptomatic Conscious Anxiety</u></strong> — manifest anxiety where subject is <em>aware</em> of their anxiousness.
             </li>
+            <li>Total the A and B scores (A + B = Total Score). Use the total to determine the <u>sten score and percentile</u> from the norms and interpret the level of anxiety.</li>
           </ol>
+          <div class="callout">
+            <strong>Sten Interpretation:</strong><br>
+            Sten <strong>4–7</strong> = Average level of anxiety<br>
+            Sten <strong>1–3</strong> = Unusually relaxed, secure and phlegmatic<br>
+            Sten <strong>8</strong> = Anxiety level getting serious<br>
+            Sten <strong>9–10</strong> = Serious anxiety level (found in only about 1 in 20 cases)
+          </div>
           <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE I — Raw score, Sten score and Percentile</p>
           <table class="data-table">
             <tr><th>Name</th><th>Score A</th><th>Score B</th><th>Total Score (A+B)</th><th>Sten Score</th><th>Percentile</th><th>Interpretation</th></tr>
@@ -800,10 +809,11 @@
         <div class="section">
           <div class="section-label">Analysis of Results</div>
           <ol class="steps">
-            <li>A score of <u>zero is given to the first two answers (a and b)</u> and a score of <u>one is given to the remaining two answers (c and d)</u>.</li>
-            <li>The number of items identified by the subject is found out. Add the raw scores in all four dimensions.</li>
-            <li><u>Individuals with a total score of 5 and above</u> are considered to be possible cases of psychological morbidity (i.e. likely to become possible psychiatric cases if symptoms continue unabated).</li>
+            <li>A score of <strong>zero (0)</strong> is given to the <u>first two answers (a and b)</u> and a score of <strong>one (1)</strong> is given to the <u>remaining two answers (c and d)</u>.</li>
+            <li>The number of items identified by the subject is found out. Add the raw scores in <strong>all four dimensions</strong> (Somatic Symptoms + Anxiety &amp; Insomnia + Social Dysfunction + Severe Depression).</li>
+            <li><u>Individuals with a total score of 5 and above</u> are considered to be <strong>possible cases of psychological morbidity</strong> — i.e. likely to become possible psychiatric cases if symptoms continue unabated.</li>
           </ol>
+          <div class="callout"><strong>Cut-off score: 5 and above</strong> = Possible Psychiatric Case / Psychological Morbidity present.<br>Score <strong>below 5</strong> = Not a possible case of psychological morbidity.</div>
           <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE I — Number of problems identified by subject in each sub-scale</p>
           <table class="data-table">
             <tr><th>Name</th><th>Somatic Symptoms</th><th>Anxiety &amp; Insomnia</th><th>Social Dysfunction</th><th>Severe Depression</th><th>Total Score</th></tr>
@@ -883,12 +893,15 @@
         <div class="section">
           <div class="section-label">Analysis</div>
           <ol class="steps">
-            <li>Count the number of circles around 'ones' in each of the columns and enter the number at the bottom of each column.</li>
-            <li>Count the number of circles around 'twos' in each of the rows and enter the number at the side of each column.</li>
-            <li>Transfer those scores onto the CIS Profile sheet. Obtain the total raw score for each occupation by adding the scores for 'ones' and 'twos'. The <u>maximum raw score possible for each field is 28</u>.</li>
-            <li>Using the norms, convert the raw scores into sten scores and interpret the subject's interest level in each of the fourteen fields.</li>
-            <li>The sten scores are used to draw the subject's Interest profile.</li>
+            <li>Count the number of circles around <strong>'ones'</strong> in each of the columns and enter the number at the <u>bottom of each column</u>.</li>
+            <li>Count the number of circles around <strong>'twos'</strong> in each of the rows and enter the number at the <u>side of each column</u>.</li>
+            <li>Transfer those scores onto the <u>CIS Profile sheet</u>. Obtain the total raw score for each occupation by adding the scores for 'ones' and 'twos'. The <strong>maximum raw score possible for each field is 28</strong>.</li>
+            <li>Using the norms, <u>convert the raw scores into sten scores</u> and interpret the subject's interest level in each of the <strong>14 occupational fields</strong>:<br><br>
+              <strong>8–10</strong> = High Interest &nbsp;·&nbsp; <strong>4–7</strong> = Average Interest &nbsp;·&nbsp; <strong>1–3</strong> = Low Interest
+            </li>
+            <li>The sten scores are used to draw the subject's <u>Interest Profile</u> across all 14 occupational fields.</li>
           </ol>
+          <div class="callout"><strong>Sten Score Interpretation:</strong> 8–10 = High Interest · 4–7 = Average Interest · 1–3 = Low Interest<br>Maximum raw score per field = 28. There is no time limit for the CIS.</div>
           <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Subject's Interest Profile (Sten Scores)</p>
           <table class="data-table">
             <tr><th>Name</th><th>Influential</th><th>Venturous</th><th>Artistic</th><th>Scientific</th><th>Analytical</th><th>Social</th><th>Nature</th><th>Clerical</th></tr>
@@ -981,12 +994,18 @@
         <div class="section">
           <div class="section-label">Analysis of Results</div>
           <ol class="steps">
-            <li>The responses of the subject are scored as follows:<br>
-              Very much = 5 · Much = 4 · Undecided = 3 · Probably = 2 · Never = 1
+            <li>The responses of the subject are scored as follows:<br><br>
+              <strong>Very much = 5 &nbsp;·&nbsp; Much = 4 &nbsp;·&nbsp; Undecided = 3 &nbsp;·&nbsp; Probably = 2 &nbsp;·&nbsp; Never = 1</strong>
             </li>
-            <li>Find out the total score of the subject. This is referred to the norms and interpreted.</li>
-            <li>Also find out the score on each of the five sub-scales (A, B, C, D, E) and interpret using the sub-scale norms.</li>
+            <li>Find out the <u>total score</u> of the subject by adding all responses. Refer to the norms and interpret accordingly using the <strong>Total Score table (a)</strong> below.</li>
+            <li>Also find out the score on each of the <strong>five sub-scales (A, B, C, D, E)</strong> separately and interpret each using the <strong>Sub-scale norms table (b)</strong> below.</li>
           </ol>
+          <div class="callout">
+            <strong>(a) Total Score Interpretation:</strong><br>
+            50–79 = Extremely Stable &nbsp;·&nbsp; 80–88 = Moderately Stable &nbsp;·&nbsp; 89–106 = Unstable &nbsp;·&nbsp; 107–240 = Extremely Unstable<br><br>
+            <strong>(b) Sub-scale Score Interpretation (Scales A, B, C, D and E):</strong><br>
+            8–13 = Extremely Stable &nbsp;·&nbsp; 14–16 = Moderately Stable &nbsp;·&nbsp; 17–25 = Unstable &nbsp;·&nbsp; 26–40 = Extremely Unstable
+          </div>
           <p style="font-size:13px;color:var(--muted);margin:14px 0 8px;font-family:'DM Mono',monospace;letter-spacing:.05em;">TABLE — Scores across the 5 areas</p>
           <table class="data-table">
             <tr><th>Name</th><th>A — Emotional Stability</th><th>B — Emotional Progression</th><th>C — Social Adjustment</th><th>D — Personality Integration</th><th>E — Independence</th><th>Total Score</th><th>Interpretation</th></tr>
@@ -1131,73 +1150,304 @@
   <!-- ══════════════ VIVA TAB ══════════════ -->
   <div id="tab-viva" class="tab-content">
 
-    <div style="margin-bottom:20px;">
-      <div class="section-label">Likely Viva Questions — click to reveal answer</div>
+    <!-- EXP 1: 16PF Introduction -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 1</span>
+        <span class="exp-title">16PF — Introduction</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+        <div class="section">
+          <div class="section-label">About the Test</div>
+          <div class="disc-text">
+            <p>16PF was devised by <u>Raymond B. Cattell</u>. It is an <u>objectively scorable test</u> which gives the most complete coverage of personality in a brief time. Designed for use with <u>literate individuals aged 16 years and above</u> whose educational level is roughly equivalent to that of the normal high school student.</p>
+            <p>The <u>correlation among the 16 scales is generally quite small</u>, so each scale provides some new piece of information about the person being tested. The 16 dimensions are not just unique to the test but instead rest within the context of a general theory of personality.</p>
+            <p>Sixteen functionally independent and <u>psychologically meaningful dimensions</u> measured by 16PF give a comprehensive coverage of personality. They have been isolated and replicated in more than 30 years of factor analytic research on normal and clinical groups.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">About Form C</div>
+          <div class="disc-text">
+            <p>The present test is <u>Form C of 16PF</u>, which has <strong>8 items for factor B scale, 7 items for factor A scale</strong>, and 6 items for the remaining scales. The questions are arranged in a roughly cyclic order determined by a plan to give maximum convenience in scoring by stencil and to ensure variety and interest.</p>
+            <p>Form C is very frequently used in <u>occupational selection, counselling and therapy</u>.</p>
+          </div>
+          <div class="star-item">The test has an <u>Affectothymia</u> accompanied by a brief, less technical title like <em>Schizothymia versus cool, warm hearted, easy going and participating</em>. Each of the primary factors measured by 16PF has an alphabetical design (A through Q4) with a technical title.</div>
+          <div class="star-item">A <u>motivational distortion scale</u> is aimed at minimising distortion and deliberate faking. <u>Rapport</u> is a step towards achieving a good measure — accurate results contribute to the subject's better understanding of careful and truthful responses.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Scoring &amp; Norms</div>
+          <div class="disc-text">
+            <p>The standardisation tables convert raw scores to what are called <u>'stens' (Standard Ten)</u>. Sten scores are distributed from 1 through 10. <u>Sten scores of 4, 5, 6 and 7 indicate average</u>; sten scores of <u>8, 9 and 10 indicate high scores</u>; sten scores of <u>1, 2 and 3 indicate low scores</u>.</p>
+            <p>Raw score must be converted into a sten score which places the subject's scores in relation to scores obtained by other people in the defined population (normal adults, college students etc.). If the M.D. sten score is 7 and above, make corrections to the remaining sten scores according to the manual.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Viva Q&amp;A</div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is the 16PF and who developed it? <span class="viva-q-tag">EXP 1</span></div>
+            <div class="viva-a">The 16PF was devised by Raymond B. Cattell. It is an objectively scorable test giving the most complete coverage of personality in a brief time. Designed for literate individuals aged 16 and above. Covers 16 functionally independent and psychologically meaningful dimensions of personality.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is a sten score? <span class="viva-q-tag">EXP 1</span></div>
+            <div class="viva-a">Sten = "Standard Ten." Raw scores are converted into sten scores (1–10). Sten scores of 4, 5, 6 and 7 = average; 8, 9, 10 = high; 1, 2, 3 = low.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What does Factor B in 16PF measure? <span class="viva-q-tag">EXP 1</span></div>
+            <div class="viva-a">Factor B measures Intelligence. It has only 6 items and uses a correct/incorrect format unlike other scales. Subject should not be encouraged to use the middle answer for Factor B.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is the Motivational Distortion (MD) scale? <span class="viva-q-tag">EXP 1</span></div>
+            <div class="viva-a">The MD scale minimises distortion and deliberate faking. It ensures the subject realises the importance of careful and truthful responses. A low MD score (below sten 7) indicates the subject answered genuinely — no corrections needed.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is the 16PF and who developed it? <span class="viva-q-tag">EXP 1</span></div>
-      <div class="viva-a">The 16PF was devised by Raymond B. Cattell. It is an objectively scorable test giving the most complete coverage of personality in a brief time. Designed for literate individuals aged 16 and above. Covers 16 functionally independent and psychologically meaningful dimensions of personality.</div>
+    <!-- EXP 2: Anxiety Introduction -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 2</span>
+        <span class="exp-title">Anxiety — Introduction</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+        <div class="section">
+          <div class="section-label">Definition</div>
+          <div class="disc-text">
+            <p>Anxiety has been defined as a <u>"state of arousal" caused by threat to the well-being</u> (Spielberg 1960).</p>
+            <ul style="padding-left:20px;font-size:14px;line-height:1.8;">
+              <li><u>"State"</u> means a condition involving the entire organism.</li>
+              <li><u>"Arousal"</u> means a condition of tension, unrest or uneasiness or readiness to act and respond.</li>
+              <li><u>"Threat"</u> means anticipation of pain or danger or serious interference with goal seeking activities.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Three Ways Anxiety Manifests</div>
+          <div class="star-item">(a) Through a <u>conscious state of discomfort and apprehension</u>.</div>
+          <div class="star-item">(b) Through <u>visceral disturbances</u> especially of digestive and <u>circulatory systems</u>.</div>
+          <div class="star-item">(c) Through <u>motor symptoms</u> which include restlessness, trembling, <u>irritability</u> and the like.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">About the Scale</div>
+          <div class="disc-text">
+            <p>One of the scales used frequently for the assessment of anxiety is the <u>Anxiety Scale developed by Krug, Scheier and R.B. Cattell</u>, first published in 1957. It includes the best <u>40 anxiety items</u> among several thousand personality items. In 1976 items in the test were carefully updated to adjust for language changes which had taken place.</p>
+          </div>
+          <div class="star-item">Generally a sten score of <u>4 to 7 indicates an average level of anxiety</u>. Sten scores of <u>1 to 3 are typically found in unusually relaxed, secure and phlegmatic individuals</u>. A sten score of <u>8 indicates a person whose anxiety level would be getting serious</u> while stens of <u>9 to 10 are found in only about 1 in 20 cases</u>.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Covert vs. Overt Anxiety</div>
+          <div class="disc-text">
+            <p>Scores have to be added for A and B separately:</p>
+          </div>
+          <div class="star-item"><strong>(A) <u>Covert – Unrealized Anxiety</u></strong> — where the subject is <em>unaware</em> of the symptoms of anxiety.</div>
+          <div class="star-item"><strong>(B) <u>Overt – Symptomatic conscious anxiety</u></strong> — or manifest anxiety where the subject is <em>aware</em> of their anxiousness (currently seen).</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Viva Q&amp;A</div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">Define anxiety. What are its three manifestations? <span class="viva-q-tag">EXP 2</span></div>
+            <div class="viva-a">Anxiety has been defined as a "state of arousal" caused by threat to the well-being (Spielberg 1960). Manifests in three ways: (a) Through a conscious state of discomfort and apprehension; (b) Through visceral disturbances especially of digestive and circulatory systems; (c) Through motor symptoms — restlessness, trembling, irritability and the like.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is the difference between Covert and Overt Anxiety? <span class="viva-q-tag">EXP 2</span></div>
+            <div class="viva-a">Covert Anxiety (A) = Unrealized Anxiety — the subject is unaware of the symptoms. Overt Anxiety (B) = Symptomatic conscious / manifest anxiety — the subject is aware of their anxiousness.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What sten score indicates average anxiety? <span class="viva-q-tag">EXP 2</span></div>
+            <div class="viva-a">A sten score of 4 to 7 indicates an average level of anxiety. Sten 1–3 = unusually relaxed and phlegmatic. Sten 8 = getting serious. Sten 9–10 = found in only about 1 in 20 cases (serious).</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is a sten score? <span class="viva-q-tag">EXP 1</span></div>
-      <div class="viva-a">Sten = "Standard Ten." Raw scores are converted into sten scores (1–10) distributed over ten equal interval standard deviations. Sten scores of 4, 5, 6 and 7 indicate average; 8, 9, 10 indicate high scores; 1, 2, 3 indicate low scores.</div>
+    <!-- EXP 3: GHQ Introduction -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 3</span>
+        <span class="exp-title">GHQ — Introduction</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+        <div class="section">
+          <div class="section-label">About the GHQ</div>
+          <div class="disc-text">
+            <p>The presence and severity of psychological symptoms can be assessed through the GHQ. Scaled GHQ is a <u>28-item questionnaire</u>, which is a <u>modified version of GHQ of Goldberg and Hillier (1972)</u> and has been used as a <u>first stage screening method for the general population</u>. The scaled version of the GHQ is intended for use in studies in which an investigator requires more information than is provided by a single severity score.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Four Sub-tests</div>
+          <div class="star-item">Scale GHQ consists of four sub-tests: (a) <strong>Somatic Symptoms</strong>, (b) <strong>Anxiety and Insomnia</strong>, (c) <strong>Social Dysfunction</strong>, (d) <strong>Severe Depression</strong>.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Purpose &amp; Focus</div>
+          <div class="disc-text">
+            <p>It is a quick and easy method to identify <u>"Possible Psychiatric cases"</u> in the community. As a screening device, it gives reliable information as a first stage screening process in community mental health services.</p>
+            <p>Emphasis is on the <u>"here and now"</u>. Subjects are asked to respond to the questions in terms of their <u>present and recent complaints</u>, not those that they had in the past.</p>
+            <p>In the Indian condition, GHQ has proved to be a <u>reliable and valid tool in population surveys</u>.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Scoring</div>
+          <div class="disc-text">
+            <p>A score of <u>zero is given to the first two answers (a and b)</u> and a score of <u>one is given to the remaining two answers (c and d)</u>. <u>Individuals with a total score of 5 and above</u> are considered to be possible cases of psychological morbidity — i.e. likely to become possible psychiatric cases if symptoms continue unabated.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Viva Q&amp;A</div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What are the four sub-scales of the GHQ? <span class="viva-q-tag">EXP 3</span></div>
+            <div class="viva-a">(a) Somatic Symptoms, (b) Anxiety and Insomnia, (c) Social Dysfunction, (d) Severe Depression. A total score of 5 and above indicates possible psychological morbidity.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What cut-off score indicates psychological morbidity on the GHQ? <span class="viva-q-tag">EXP 3</span></div>
+            <div class="viva-a">Individuals with a total score of 5 and above are considered to be possible cases of psychological morbidity — i.e. likely to become possible psychiatric cases if symptoms continue unabated.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What does "here and now" mean in context of GHQ? <span class="viva-q-tag">EXP 3</span></div>
+            <div class="viva-a">The GHQ emphasises the "here and now" — subjects are asked about their present and recent complaints only, not complaints they had in the past. This makes it useful as a current mental health screening tool.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What does Factor B in 16PF measure? <span class="viva-q-tag">EXP 1</span></div>
-      <div class="viva-a">Factor B measures Intelligence. It has only 6 items (not 8) and uses a correct/incorrect format. The subject should not be encouraged to use the middle answer for Factor B.</div>
+    <!-- EXP 4: CIS Introduction -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 4</span>
+        <span class="exp-title">CIS — Introduction</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+        <div class="section">
+          <div class="section-label">About Interest</div>
+          <div class="disc-text">
+            <p>The strength and direction of the individual's interests represents an important aspect of their personality and affects educational and vocational pursuits. <u>Interest has more to do with whether a task is attempted with motivation rather than how well it is performed</u>. One's performance on the job depends on abilities. However, whether or not they stay on the job will largely reflect whether they like or dislike it. For this reason, <u>interest ratings are better indices of job persistence rather than of job success</u>.</p>
+            <p>The study of interest has received its strongest impetus from <u>vocational educational counselling</u>.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">About the CIS</div>
+          <div class="disc-text">
+            <p>The <u>Comprehensive Interest Schedule, by Sanjay Vohra</u>, is useful for counselling high school and college students about their career choices, and is also applicable to adults for selection and placement in industrial settings.</p>
+            <p>The CIS is an <u>objective device representing relative interest in eight broad vocational areas</u>, and <u>fourteen occupational interests</u>.</p>
+          </div>
+          <div class="star-item">The 8 broad vocational areas: <strong>Influential · Venturous · Artistic · Scientific · Analytical · Social · Nature · Clerical</strong></div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Scoring</div>
+          <div class="disc-text">
+            <p>The maximum raw score possible for each field is 28. Using the norms, raw scores are converted into sten scores.</p>
+            <p><strong>8–10</strong> = High Interest · <strong>4–7</strong> = Average Interest · <strong>1–3</strong> = Low Interest</p>
+            <p>The sten scores are used to draw the subject's Interest profile.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Viva Q&amp;A</div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What does the CIS measure and who developed it? <span class="viva-q-tag">EXP 4</span></div>
+            <div class="viva-a">The Comprehensive Interest Schedule was developed by Sanjay Vohra. It measures relative interest in 8 broad vocational areas and 14 occupational interests. Useful for career counselling with students and for selection/placement in industrial settings.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">Why are interest ratings better indices of job persistence than job success? <span class="viva-q-tag">EXP 4</span></div>
+            <div class="viva-a">Interest has more to do with whether a task is attempted with motivation rather than how well it is performed. Performance depends on abilities, but whether a person stays on the job largely reflects whether they like or dislike it — hence interest predicts persistence, not success.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is the maximum raw score for each CIS field? <span class="viva-q-tag">EXP 4</span></div>
+            <div class="viva-a">The maximum raw score possible for each field is 28. Obtained by adding the scores for 'ones' and 'twos' from the CIS form.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is the Motivational Distortion (MD) scale? <span class="viva-q-tag">EXP 1</span></div>
-      <div class="viva-a">The MD scale minimises distortion and ensures variety and interest. It ensures the subject realises the importance of careful and truthful responses. A low MD score indicates the subject answered genuinely — no corrections needed.</div>
-    </div>
+    <!-- EXP 5: EMS Introduction -->
+    <div class="exp-card">
+      <div class="exp-header" onclick="toggleExp(this)">
+        <span class="exp-num">EXP 5</span>
+        <span class="exp-title">EMS — Introduction</span>
+        <span class="exp-toggle">▾</span>
+      </div>
+      <div class="exp-body">
+        <div class="section">
+          <div class="section-label">Definition</div>
+          <div class="disc-text">
+            <p><u>Emotional maturity is a state of having reached an adult level of emotional development which implies emotional control in social situations.</u></p>
+            <p>According to <u>Walter D. Smitson (1974)</u>, emotional maturity is a process in which the personality is continuously striving for greater sense of emotional health, both intra-psychically and inter-personally.</p>
+          </div>
+          <div class="star-item">According to <u>Cote (1944)</u>, the most outstanding mark (make) of emotional maturity is the <u>ability to bear tension</u>.</div>
+        </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">Define anxiety. What are its three manifestations? <span class="viva-q-tag">EXP 2</span></div>
-      <div class="viva-a">Anxiety has been defined as a "state of arousal" caused by threat to the well-being (Spielberg 1960). Manifests in three ways: (a) Through a conscious state of discomfort and apprehension; (b) Through visceral disturbances especially of digestive and circulatory systems; (c) Through motor symptoms — restlessness, trembling, irritability and the like.</div>
-    </div>
+        <div class="section">
+          <div class="section-label">Characteristics of an Emotionally Mature Person</div>
+          <div class="disc-text"><p>Kaplan and Baron elaborate the characteristics of an emotionally mature person. He/She:</p></div>
+          <div class="star-item">(a) Has the capacity to withstand <u>delay in satisfaction of needs</u> — delayed gratification.</div>
+          <div class="star-item">(b) Ability to tolerate a reasonable amount of frustration.</div>
+          <div class="star-item">(c) Belief in long term planning.</div>
+          <div class="star-item">(d) Capable of delaying or revising expectations in terms of the demands the situation makes.</div>
+          <div class="disc-text" style="margin-top:10px;">
+            <p>An emotionally mature individual is not the one who has resolved anxiety and hostility, but is <u>continuously in a process of seeing himself in a clear perspective</u> and is involved in a struggle to gain healthy integration of feeling, thinking and action.</p>
+            <p>An <u>emotionally immature person</u> reacts like a child, looks for sympathy, is <u>conceited, infantile, self-centered, demanding, emotionally excited</u> and is very upset to lose a game.</p>
+          </div>
+        </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is the difference between Covert and Overt Anxiety? <span class="viva-q-tag">EXP 2</span></div>
-      <div class="viva-a">Covert Anxiety (A) = Unrealized Anxiety — the subject is unaware of the symptoms. Overt Anxiety (B) = Symptomatic conscious / manifest anxiety — the subject is aware of their anxiousness.</div>
-    </div>
+        <div class="section">
+          <div class="section-label">The 5 Broad Factors</div>
+          <div class="disc-text"><p>The authors of the Emotional Maturity Scale prepared a list of five broad factors of emotional maturity:</p></div>
+          <div class="star-item"><strong>I. <u>Emotional Stability</u></strong> — refers to the characteristics of a person that does not allow them to react excessively to changes in moods or emotive situations. The emotionally stable person is able to do what is required in any given situation. Emotional instability is a tendency for quick changes of emotions with irritability, stubbornness, temper tantrums, <u>lack of capacity to solve problems</u> and seeking help from others for day to day problems.</div>
+          <div class="star-item"><strong>II. <u>Emotional Progression</u></strong> — the characteristic of a person that refers to a feeling of adequacy and growing vitality of emotions in relation to the environment. <u>Emotional regression</u> consists of syndromes like feeling of inferiority, restlessness, hostility, aggressiveness and self-centeredness.</div>
+          <div class="star-item"><strong>III. <u>Social Adjustment</u></strong> — refers to a process of integration between the needs of a person and demands of the social environment, so that they can maintain and adapt a desired relationship with the environment. A socially maladjusted person shows <u>lack of social adaptability, shows hatred, is seclusive, boasts, lies and shirks responsibility</u>.</div>
+          <div class="star-item"><strong>IV. <u>Personality Integration</u></strong> — is the process of firmly unifying the diverse elements of an individual's motives and dynamic tendencies resulting in harmonious interactions. <u>Disintegrated personality</u> includes symptoms like phobia, rationalization, immorality, pessimism, destruction, has a distorted sense of reality and shows a varied degree of neuroticism.</div>
+          <div class="star-item"><strong>V. <u>Independence</u></strong> — is the capacity of a person to be self-reliant characterised by an ability to take decisions using intellectual and creative potentialities. A <u>dependent person</u> shows parasitic dependence on others.</div>
+        </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What are the four sub-scales of the GHQ? <span class="viva-q-tag">EXP 3</span></div>
-      <div class="viva-a">(a) Somatic Symptoms, (b) Anxiety and Insomnia, (c) Social Dysfunction, (d) Severe Depression. A total score of 5 and above indicates possible psychological morbidity.</div>
-    </div>
+        <div class="section">
+          <div class="section-label">Scoring</div>
+          <div class="disc-text">
+            <p><strong>Response Scoring:</strong> Very much = 5 &nbsp;·&nbsp; Much = 4 &nbsp;·&nbsp; Undecided = 3 &nbsp;·&nbsp; Probably = 2 &nbsp;·&nbsp; Never = 1</p>
+            <p><strong>(a) Total Score Interpretation:</strong><br>
+              50–79 = Extremely Stable &nbsp;·&nbsp; 80–88 = Moderately Stable &nbsp;·&nbsp; 89–106 = Unstable &nbsp;·&nbsp; 107–240 = Extremely Unstable
+            </p>
+            <p><strong>(b) Sub-scale Score Interpretation (each of Scales A, B, C, D, E):</strong><br>
+              8–13 = Extremely Stable &nbsp;·&nbsp; 14–16 = Moderately Stable &nbsp;·&nbsp; 17–25 = Unstable &nbsp;·&nbsp; 26–40 = Extremely Unstable
+            </p>
+          </div>
+        </div>
 
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What cut-off score indicates psychological morbidity on the GHQ? <span class="viva-q-tag">EXP 3</span></div>
-      <div class="viva-a">Individuals with a total score of 5 and above are considered to be possible cases of psychological morbidity — i.e. likely to become possible psychiatric cases if symptoms continue unabated.</div>
-    </div>
-
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What does the CIS measure and who developed it? <span class="viva-q-tag">EXP 4</span></div>
-      <div class="viva-a">The Comprehensive Interest Schedule was developed by Sanjay Vohra. It measures relative interest in 8 broad vocational areas and 14 occupational interests. Useful for career counselling with students and for selection/placement in industrial settings.</div>
-    </div>
-
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is the maximum raw score for each CIS field? <span class="viva-q-tag">EXP 4</span></div>
-      <div class="viva-a">The maximum raw score possible for each field is 28. Obtained by adding the scores for 'ones' and 'twos' from the CIS form.</div>
-    </div>
-
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">Define emotional maturity. Who developed the EMS? <span class="viva-q-tag">EXP 5</span></div>
-      <div class="viva-a">Emotional maturity is a state of having reached an adult level of emotional development which implies emotional control in social situations. The EMS was developed by Dr. Yashvir Singh and Dr. Mahesh Bhargava. It assesses emotional maturity across 5 dimensions: Emotional Stability, Emotional Progression, Social Adjustment, Personality Integration, and Independence.</div>
-    </div>
-
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What is the most outstanding mark of emotional maturity according to Cote (1944)? <span class="viva-q-tag">EXP 5</span></div>
-      <div class="viva-a">According to Cote (1944), the most outstanding mark of emotional maturity is the ability to bear tension.</div>
-    </div>
-
-    <div class="viva-item">
-      <div class="viva-q" onclick="toggleViva(this)">What are the EMS scoring categories? <span class="viva-q-tag">EXP 5</span></div>
-      <div class="viva-a">Total score interpretation: 50–79 = Extremely stable · 80–88 = Moderately stable · 89–106 = Unstable · 107–240 = Extremely unstable. Each response scored: Very much = 5, Much = 4, Undecided = 3, Probably = 2, Never = 1.</div>
+        <div class="section">
+          <div class="section-label">Viva Q&amp;A</div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">Define emotional maturity. Who developed the EMS? <span class="viva-q-tag">EXP 5</span></div>
+            <div class="viva-a">Emotional maturity is a state of having reached an adult level of emotional development which implies emotional control in social situations. The EMS was developed by Dr. Yashvir Singh and Dr. Mahesh Bhargava. It assesses emotional maturity across 5 dimensions: Emotional Stability, Emotional Progression, Social Adjustment, Personality Integration, and Independence.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What is the most outstanding mark of emotional maturity according to Cote (1944)? <span class="viva-q-tag">EXP 5</span></div>
+            <div class="viva-a">According to Cote (1944), the most outstanding mark of emotional maturity is the ability to bear tension.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What are the EMS scoring categories? <span class="viva-q-tag">EXP 5</span></div>
+            <div class="viva-a">Total score interpretation: 50–79 = Extremely stable · 80–88 = Moderately stable · 89–106 = Unstable · 107–240 = Extremely unstable. Each response: Very much = 5, Much = 4, Undecided = 3, Probably = 2, Never = 1.</div>
+          </div>
+          <div class="viva-item">
+            <div class="viva-q" onclick="toggleViva(this)">What are the characteristics of an emotionally immature person? <span class="viva-q-tag">EXP 5</span></div>
+            <div class="viva-a">An emotionally immature person reacts like a child, looks for sympathy, is conceited, infantile, self-centered, demanding, emotionally excited and is very upset to lose a game.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div><!-- /viva tab -->
